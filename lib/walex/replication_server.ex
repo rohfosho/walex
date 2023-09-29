@@ -16,9 +16,9 @@ defmodule WalEx.ReplicationServer do
   end
 
   defp set_pgx_replication_conn_opts(app_name) do
-    database_configs_keys = [:hostname, :username, :password, :port, :database]
+    database_configs_keys = [:hostname, :username, :password, :port, :database, :ssl, :ssl_opts]
 
-    extra_opts = [auto_reconnect: false, ssl: true, ssl_opts: [verify: :verify_none]]
+    extra_opts = [auto_reconnect: false]
     database_configs = WalEx.Configs.get_configs(app_name, database_configs_keys)
     replications_name = [name: WalEx.Registry.set_name(:set_gen_server, __MODULE__, app_name)]
 
@@ -77,7 +77,6 @@ defmodule WalEx.ReplicationServer do
         0 -> []
       end
 
-    IO.puts("Received keepalive: #{inspect(reply)}\n")
     {:noreply, messages, state}
   end
 
